@@ -27,6 +27,9 @@ ________________________
 	+ Closest to the overall route (you don't want to go out of your way)
 5. Repeat - finding directions from the current docking station you have stopped at.
 
+**Download and cache from the TFL live feed every 3 minutes.**
+
+
 **You must wait 5 minutes before taking another ride. We are making the assumption that you will wait exactly 5 minutes and leave from the same docking station.**
 
 ### 'Back End' Usage
