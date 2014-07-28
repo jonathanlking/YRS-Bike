@@ -20,7 +20,7 @@ YRS 2014 Festival of Code - Cycle Routes
 	+ Closest to the overall route (you don't want to go out of your way)
 5. Repeat - finding directions from the current docking station you have stopped at.
 
-**You must wait 5 minutes before taking another ride.**
+**You must wait 5 minutes before taking another ride. We are making the assumption that you will wait exactly 5 minutes and leave from the same docking station.**
 
 ### 'Back End' Usage
 
@@ -39,12 +39,29 @@ e.g. London Zoo to Big Ben
 
 `.../process.php?from_longitude=-0.155715844&from_latitude=51.535630782&to_longitude=-0.124572515&to_latitude=51.500645178`
 
-**Responce**
+**You can use the start and end point coordinates returned to confirm the request is the latest**
 
+**Response**
 
-`notices`  
-`calendar` 
+	timestamp
+	start
+		longitude
+		latitude
+		time
+	
+	stations (array)
+		...
+		station
+			id (TFL station id)
+			name (Map description name)
+			longitude
+			latitude
+			time (When you leave from the station)
+			duration (Time between this docking station and the next)
+		...
+	
+	end
+		longitude
+		latitude
+		time
 
-start location (way to verify)
-array of docking stations - with time interval - time of arrival - duration - coordinates
-end location
