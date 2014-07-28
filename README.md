@@ -7,7 +7,7 @@ YRS 2014 Festival of Code - Cycle Routes
 1. Get current location / input start location
 2. Choose destination
 
--> A route that has stops every 30 minutes, where you can switch bikes, so that you avoid costs.
+**It generates a route that has stops every 30 minutes, where you can switch bikes, so that you avoid paying extra.**
 
 ###Implementation
 
@@ -22,15 +22,25 @@ YRS 2014 Festival of Code - Cycle Routes
 
 **You must wait 5 minutes before taking another ride.**
 
-### What to expect from the 'back end'
+### 'Back End' Usage
+
+Named `process.php`
 
 You pass in the 'to' and 'from' coordinates.
 
-e.g.
+`from_longitude`  
+`from_latitude`  
+`to_longitude`  
+`to_latitude`
 
-.../process.php?longitude="-0.127716064"&latitude="51.507246657"
+**Sample request**
 
-Out ->
+e.g. London Zoo to Big Ben  
+
+`.../process.php?from_longitude=-0.155715844&from_latitude=51.535630782&to_longitude=-0.124572515&to_latitude=51.500645178`
+
+**Responce**
+
 
 `notices`  
 `calendar` 
