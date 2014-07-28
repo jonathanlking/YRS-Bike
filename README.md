@@ -3,11 +3,18 @@ YRS 2014 Festival of Code - Cycle Routes
 
 
 ###What it Does
+_____________________
+
+**It generates a route that has stops every 30 minutes, where you switch bikes, so that you avoid paying more than the £2 charge for the day.**
+
+###How to operate
+________________________
 
 1. Get current location / input start location
 2. Choose destination
 
-**It generates a route that has stops every 30 minutes, where you can switch bikes, so that you avoid paying extra.**
+________________________
+
 
 ###Implementation
 
