@@ -21,3 +21,20 @@ YRS 2014 Festival of Code - Cycle Routes
 5. Repeat - finding directions from the current docking station you have stopped at.
 
 **You must wait 5 minutes before taking another ride.**
+
+### What to expect from the 'back end'
+
+You pass in the 'to' and 'from' coordinates.
+
+e.g.
+
+.../process.php?longitude="-0.127716064"&latitude="51.507246657"
+
+Out ->
+
+`notices`  
+`calendar` 
+
+start location (way to verify)
+array of docking stations - with time interval - time of arrival - duration - coordinates
+end location
