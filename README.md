@@ -48,9 +48,10 @@ e.g. London Zoo to Big Ben
 
 **You can use the start and end point coordinates returned to confirm the request is the latest**
 
-**Response**
+**Response Structure**
 
 	timestamp
+	distance
 	start
 		longitude
 		latitude
@@ -63,12 +64,48 @@ e.g. London Zoo to Big Ben
 			name (Map description name)
 			longitude
 			latitude
+			distance
 			time (When you leave from the station)
 			duration (Time between this docking station and the next)
 		...
-	
+		
 	end
 		longitude
 		latitude
 		time
 
+**Sample Responce**
+
+	{
+		"timestamp": "2014-07-28T15:30:00Z",
+		"start": {
+			"longitude": "-0.155715844"
+			"latitude": "51.535630782"
+			"time": "2014-07-28T15:30:00Z"
+		},
+		"stations": [
+			{
+				"id": "",
+      			"name": "",
+      			"longitude": "",
+      			"latitude": "",
+      			"distance": "",
+      			"time": "",
+      			"duration": "",
+			},
+			{
+				"id": "",
+      			"name": "",
+      			"longitude": "",
+      			"latitude": "",
+      			"distance": "",
+      			"time": "",
+      			"duration": "",
+			}
+		],
+		"end": {
+			"longitude": "0.124572515"
+			"latitude": "51.500645178"
+			"time": "2014-07-28T16:15:00Z"
+		}
+	}
