@@ -11,7 +11,7 @@ YRS 2014 Festival of Code - Cycle Routes
 ###Implementation
 
 1. Find nearest stations near your current location.
-2. Find the point on your journey whre you will be in the (30 - k)th minute - ie when k = 5, the 25th minute.
+2. Find the point on your journey whre you will be in the (30 - k)th minute - i.e. when k = 5, the 25th minute.
 3. Find the docking stations near that point.
 4. Choose the station that;
 	Takes less than k minutes to get to.
