@@ -65,31 +65,22 @@ function distanceToNearestAvailableBike (latitude, longitude, callback) {
 	nearestStations(latitude, longitude, function (stations){
 		
 		// Loop through, until a station with available bikes is found
-		for (var i=0; i<stations.length; i++) {
+		var abort = false;
+		for (var i=0; i<stations.length && !abort; i++) {
 		
 			var nearestStation = stations[i];
 			var station = Object.keys(nearestStation)[0];
 			
-			var type = typeof station;
-			console.log(station);
-/* 			console.log(type); */
-			
-			
-			bikesAvailableForStation (station, function(number){
-/* 				console.log(number + " bikes available"); */
-			});
-/*
-			bikesAvailableForStation (station, function(bikes) {
-			
-			
+			bikesAvailableForStation (station, function(bikes){
+/* 				console.log(bikes + " bikes available"); */
 				
 				if (bikes > 0) {
 					
 					// Use this station, as there are bikes available
 					var distance = nearestStation[station];
 					callback(distance);
-					// Escape
-					return;
+					// Used to escape the loop
+					abort = true;
 				}
 				
 				else {
@@ -100,7 +91,6 @@ function distanceToNearestAvailableBike (latitude, longitude, callback) {
 					if (i == stations.length -1) callback(-1);
 				}
 			});
-*/
 		}
 	});
 }
@@ -119,10 +109,7 @@ function bikesAvailableForStation (id, callback) {
 	// The callback receives the number of bikes available for a station id
 	
 	stationForId (id, function (station){
-		console.log ("bikesAvailableForStation");
-		console.log(station);
 		var bikes = parseInt(station.nbBikes);
-		console.log(bikes);
 		callback(bikes);
 	});
 }
@@ -179,7 +166,7 @@ function stationForId (id, callback) {
 			
 			if (array[i].id == id) {
 				
-				console.log("Found at index " + i);
+/* 				console.log("Found at index " + i); */
 				callback(array[i]);
 				break;
 			}
@@ -221,14 +208,12 @@ function cycleData (callback) {
 
 	if (loadedData) {
 		
-		console.log("Cached");
 		callback(loadedData);
 	} 
-	else {
-		
-		console.log("Not Cached");	
+	else {	
 	 
 		// Load from file
+		
 		fileStream.readFile('cache.xml', 'utf8', function (error,file) {
 			if (error) console.log(error);
 			else {
@@ -265,5 +250,5 @@ function cacheXML() {
 		}
 	});
     
-    setTimeout(cacheXML,1000*3);
+    setTimeout(cacheXML,1000*3*60);
 }
