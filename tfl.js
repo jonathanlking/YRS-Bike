@@ -4,6 +4,9 @@ var request = require('request');
 var fileStream = require('fs');
 var parseString = require('xml2js').parseString;
 
+// Global variable for storing the cycle data - access via the cycleData() function
+var cycleData_global;
+
 function degreesToRadians(degrees) {
   return degrees * (Math.PI/180)
 }
@@ -21,11 +24,19 @@ http.createServer(function (request, responce) {
   	 	console.log("Distance to station is " + distance + "m");
   	 });
 */
+/*
   	 docksAvailableForStation (10, function(number){
 	  	 console.log(number + " docks available");
   	 });
+*/
+/*
   	 bikesAvailableForStation (10, function(number){
 	  	 console.log(number + " bikes available");
+  	 });
+*/
+
+	 distanceToNearestAvailableBike (51.535630782, -0.155715844, function (distance) {
+  	 	console.log("Distance to nearest available bike is " + distance + "m");
   	 });
   	 
   	 responce.end("Success");
@@ -50,14 +61,45 @@ function distanceToNearestStation (latitude, longitude, callback) {
 }
 
 function distanceToNearestAvailableBike (latitude, longitude, callback) {
+
 	
 	// The callback will receive the distance in metres to the nearest dock where there is a bike available
 	
-	nearestStation (latitude, longitude, function (stations){
+	nearestStations(latitude, longitude, function (stations){
 		
-		var nearestStation = stations[0];
-		var distance = nearestStation[Object.keys(nearestStation)[0]];
-		callback(distance);
+		// Loop through, until a station with available bikes is found
+		for (var i=0; i<stations.length; i++) {
+		
+			var nearestStation = stations[i];
+			var station = Object.keys(nearestStation)[0];
+			
+			bikesAvailableForStation (station, function(number){
+				console.log(number + " bikes available");
+			});
+/*
+			bikesAvailableForStation (station, function(bikes) {
+			
+			
+				
+				if (bikes > 0) {
+					
+					// Use this station, as there are bikes available
+					var distance = nearestStation[station];
+					callback(distance);
+					// Escape
+					return;
+				}
+				
+				else {
+					
+					// Move on to the next station
+					
+					// Check that you haven't run out of stations - very unlikely...
+					if (i == stations.length -1) callback(-1);
+				}
+			});
+*/
+		}
 	});
 }
 
@@ -105,7 +147,6 @@ function nearestStations (latitude, longitude, callback) {
 		}
 		
 		var sorted = distanceArray.sort(compareDistancesOfStations);
-		console.log(sorted);
 		callback(sorted);
 	});
 }
@@ -162,19 +203,30 @@ function cycleData (callback) {
 	
 	// Read the cached data
 	
-	fileStream.readFile('cache.xml', 'utf8', function (error,file) {
-		if (error) console.log(error);
-		else {
-			
-			// Read the cached data, convert it to json and return it.
-			
-			parseString(file, function (error, result) {
-				callback(result);
-			}); 
-			
-		}
-	});
+	if (cycleData_global) { 
 	
+	console.log("Unsafe");
+	callback(cycleData_global);
+	
+	}
+	else {
+		
+		// Load from file
+		fileStream.readFile('cache.xml', 'utf8', function (error,file) {
+			if (error) console.log(error);
+			else {
+				
+				// Read the cached data, convert it to json and return it.
+				
+				parseString(file, function (error, result) {
+					cycleData_global = result;
+					callback(cycleData_global);
+				}); 
+				
+			}
+		});
+		
+	}	
 }
 
 function cacheXML() {
@@ -195,6 +247,9 @@ function cacheXML() {
 			
 		}
 	});
+    
+    // Force to refresh from the latest cache, saved on file
+    cycleData_global = null;
     
     setTimeout(cacheXML,1000*60*3);
 }
