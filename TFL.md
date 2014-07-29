@@ -8,13 +8,47 @@ A node.js application that supports basic requests for the TFL cycle hire scheme
 
 ###Functionality
 
+
 Distance to nearest docking station
-	nearest available (specify to dock or to take a bike)
+
+**returns distance in m (to nearest metre)**
+
+---------------------------------------------
+
+Distance to nearest *available* docking station
+
+**returns distance in m (to nearest metre)**
+
+---------------------------------------------
 
 Nearest stations (specify how many - return 5 by default)
-	nearest available '' ''
+
+**returns array of TFL station objects**
+
+---------------------------------------------
+
+Nearest stations *available* (specify how many - return 5 by default)
+
+**returns array of TFL station objects**
+
+---------------------------------------------
 
 Stations within ... metres
-	available stations within ... metres
+	
+**returns array of TFL station objects**
+
+---------------------------------------------
+
+*Available* stations within ... metres
+	
+**returns array of TFL station objects**
+
+---------------------------------------------
+
+Station with id
+**returns TFL station object with corresponding id**
+
+---------------------------------------------
 
 Spaces availble (specify to dock or to take a bike) for station.
+**returns number of spaces**

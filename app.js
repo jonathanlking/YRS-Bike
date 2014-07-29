@@ -10,8 +10,9 @@ http.createServer(function (request, responce) {
   cacheXML();
   cycleData(function(data){
   	 // The data is provided in a closure, as it is read from file.
-  	 var lastUpdated = new Date(data.stations.$.lastUpdate);
-  	 responce.end();
+  	 
+  	 console.log(data.stations.$.lastUpdate);
+  	 responce.end("Working fine."); 
   });
 
 }).listen(1337, '127.0.0.1');
@@ -28,8 +29,7 @@ function cycleData(callback) {
 			// Read the cached data, convert it to json and return it.
 			
 			parseString(file, function (error, result) {
-				var json = JSON.stringify(result, null, 4);
-				callback(JSON.parse(json));
+				callback(result);
 			}); 
 			
 		}
@@ -43,12 +43,14 @@ function cacheXML() {
     
 	request('http://www.tfl.gov.uk/tfl/syndication/feeds/cycle-hire/livecyclehireupdates.xml', function (error, response, body) {
 		if (!error && response.statusCode == 200) {
+		
+			console.log("File downloaded.");
 			
 			// Cache the data to file
 			
 			fileStream.writeFile('cache.xml', body, function(error) {
 				if(error) console.log(error);
-				else console.log("The file was saved!");
+				else console.log("File cached.");
 			});
 			
 		}
