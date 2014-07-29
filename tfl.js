@@ -42,11 +42,17 @@ function nearestStation (latitude, longitude, callback) {
 			
 			var distance = distanceBetweenCoordinates (latitude, longitude, station_latitude, station_longitude);
 			
-			console.log("Distance from Regents Park to " + name + " is " + distance + "m");
+/* 			console.log("Distance from Regents Park to " + name + " (" + id + ") is " + distance + "m"); */
 			
-			distanceArray
+			var object  = {};
+			object[id] = distance;
+			distanceArray.push(object);
+			
 			
 		}
+		
+		distanceArray.sort(compareDistancesOfStations);
+		console.log(distanceArray);
 		
 	});
 }
@@ -62,6 +68,17 @@ function stationForId (id, callback) {
 		callback(station);
 		
 	});
+}
+
+function compareDistancesOfStations(a,b) {
+	
+	// Get the key id for a and then find the associated value, the distance.
+	distance_a = a[Object.keys(a)[0]];
+	distance_b = b[Object.keys(b)[0]];
+	
+	if (distance_a < distance_b) return -1;
+    if (distance_a > distance_b) return 1;
+    return 0;
 }
 
 function distanceBetweenCoordinates (latitude_1,longitude_1,latitude_2,longitude_2) {
