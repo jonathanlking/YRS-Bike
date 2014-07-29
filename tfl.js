@@ -51,8 +51,8 @@ function distanceToNearestStation (latitude, longitude, callback) {
 	
 	nearestStations(latitude, longitude, function (stations){
 		
-		var nearestStation = stations[0];
-		var distance = nearestStation[Object.keys(nearestStation)[0]];
+		var nearestStationIdDistancePair = stations[0];
+		var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
 		callback(distance);
 	});
 }
@@ -68,16 +68,15 @@ function distanceToNearestAvailableBike (latitude, longitude, callback) {
 		var abort = false;
 		for (var i=0; i<stations.length && !abort; i++) {
 		
-			var nearestStation = stations[i];
-			var station = Object.keys(nearestStation)[0];
+			var nearestStationIdDistancePair = stations[i];
+			var stationId = Object.keys(nearestStationIdDistancePair)[0];
 			
-			bikesAvailableForStation (station, function(bikes){
-/* 				console.log(bikes + " bikes available"); */
+			bikesAvailableForStation (stationId, function(bikes){
 				
 				if (bikes > 0) {
 					
 					// Use this station, as there are bikes available
-					var distance = nearestStation[station];
+					var distance = nearestStationIdDistancePair[stationId];
 					callback(distance);
 					// Used to escape the loop
 					abort = true;
@@ -95,12 +94,52 @@ function distanceToNearestAvailableBike (latitude, longitude, callback) {
 	});
 }
 
+function distanceToNearestAvailableDock (latitude, longitude, callback) {
+
+	
+	// The callback will receive the distance in metres to the nearest dock where there is a bike available
+	
+	nearestStations(latitude, longitude, function (stations){
+		
+		// Loop through, until a station with available bikes is found
+		var abort = false;
+		for (var i=0; i<stations.length && !abort; i++) {
+		
+			var nearestStationIdDistancePair = stations[i];
+			var stationId = Object.keys(nearestStationIdDistancePair)[0];
+			
+			docksAvailableForStation (stationId, function(docks){
+				
+				if (docks > 0) {
+					
+					// Use this station, as there are bikes available
+					var distance = nearestStationIdDistancePair[station];
+					callback(distance);
+					// Used to escape the loop
+					abort = true;
+				}
+				
+				else {
+					
+					// Move on to the next station
+					
+					// Check that you haven't run out of stations - very unlikely...
+					if (i == stations.length -1) callback(-1);
+				}
+			});
+		}
+	});
+}
+
+
+
 function docksAvailableForStation (id, callback) {
 	
 	// The callback receives the number of docks available for a station id
 	
 	stationForId (id, function (station){
-		callback(station.nbEmptyDocks);
+		var docks = parseInt(station.nbEmptyDocks)
+		callback(docks);
 	});
 }
 
