@@ -14,14 +14,78 @@ http.createServer(function (request, responce) {
   cacheXML();
   cycleData(function(data){
   	 // The data is provided in a closure, as it is read from file.
-  	 nearestStation (51.535630782, -0.155715844, null);
+  	 
+/*	 nearestStations (51.535630782, -0.155715844, null); */
+/*
+  	 distanceToNearestStation (51.535630782, -0.155715844, function (distance) {
+  	 	console.log("Distance to station is " + distance + "m");
+  	 });
+*/
+  	 docksAvailableForStation (10, function(number){
+	  	 console.log(number + " docks available");
+  	 });
+  	 bikesAvailableForStation (10, function(number){
+	  	 console.log(number + " bikes available");
+  	 });
+  	 
   	 responce.end("Success");
   });
 
 }).listen(1337, '127.0.0.1');
+
 console.log('Server running at http://127.0.0.1:1337/');
 
-function nearestStation (latitude, longitude, callback) {
+/*----------Main Functions----------*/
+
+function distanceToNearestStation (latitude, longitude, callback) {
+
+	// The callback will receive the distance in metres 
+	
+	nearestStations(latitude, longitude, function (stations){
+		
+		var nearestStation = stations[0];
+		var distance = nearestStation[Object.keys(nearestStation)[0]];
+		callback(distance);
+	});
+}
+
+function distanceToNearestAvailableBike (latitude, longitude, callback) {
+	
+	// The callback will receive the distance in metres to the nearest dock where there is a bike available
+	
+	nearestStation (latitude, longitude, function (stations){
+		
+		var nearestStation = stations[0];
+		var distance = nearestStation[Object.keys(nearestStation)[0]];
+		callback(distance);
+	});
+}
+
+function docksAvailableForStation (id, callback) {
+	
+	// The callback receives the number of docks available for a station id
+	
+	stationForId (id, function (station){
+		callback(station.nbEmptyDocks);
+	});
+}
+
+function bikesAvailableForStation (id, callback) {
+	
+	// The callback receives the number of bikes available for a station id
+	
+	stationForId (id, function (station){
+		callback(station.nbBikes);
+	});
+}
+
+/*----------*-----------*/
+
+/*----------Helper Functions----------*/
+
+function nearestStations (latitude, longitude, callback) {
+
+	// The callback receives an ordered array (in increasing distance) of {id : distance}
 	
 	cycleData (function(data) {
 		
@@ -38,13 +102,11 @@ function nearestStation (latitude, longitude, callback) {
 			object[id] = distance;
 			distanceArray.push(object);
 			
-			
 		}
 		
-		distanceArray.sort(compareDistancesOfStations);
-		var station = distanceArray[0]
-		console.log(distanceArray);
-		
+		var sorted = distanceArray.sort(compareDistancesOfStations);
+		console.log(sorted);
+		callback(sorted);
 	});
 }
 
