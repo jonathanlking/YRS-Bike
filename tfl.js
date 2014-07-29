@@ -15,7 +15,13 @@ http.createServer(function (request, responce) {
   cycleData(function(data){
   	 // The data is provided in a closure, as it is read from file.
   	 
-/*	 nearestStations (51.535630782, -0.155715844, null); */
+/*
+	 nearestStations (51.535630782, -0.155715844, function (stations){
+		 
+		 console.log(stations);
+		 
+	 }, 3);
+*/
 /*
   	 distanceToNearestStation (51.535630782, -0.155715844, function (distance) {
   	 	console.log("Distance to station is " + distance + "m");
@@ -32,9 +38,16 @@ http.createServer(function (request, responce) {
   	 });
 */
 
+/*
 	 distanceToNearestAvailableBike (51.535630782, -0.155715844, function (distance) {
   	 	console.log("Distance to nearest available bike is " + distance + "m");
   	 });
+*/
+/*
+	 distanceToNearestAvailableDock (51.535630782, -0.155715844, function (distance) {
+  	 	console.log("Distance to nearest available dock is " + distance + "m");
+  	 });
+*/
   	 
   	 responce.end("Success");
   });
@@ -113,7 +126,7 @@ function distanceToNearestAvailableDock (latitude, longitude, callback) {
 				if (docks > 0) {
 					
 					// Use this station, as there are bikes available
-					var distance = nearestStationIdDistancePair[station];
+					var distance = nearestStationIdDistancePair[stationId];
 					callback(distance);
 					// Used to escape the loop
 					abort = true;
@@ -131,7 +144,33 @@ function distanceToNearestAvailableDock (latitude, longitude, callback) {
 	});
 }
 
+function nearestStations (latitude, longitude, callback, number) {
 
+	// The callback receives an ordered array (in increasing distance) of {id : distance}
+	
+	cycleData(function(data) {
+		
+		var distanceArray = [];
+		
+		for (var i=0; i<data.stations.station.length; i++) {
+
+			// Iterate through all the stations
+			var name = JSON.stringify(data.stations.station[i].name[0]);
+			var id = data.stations.station[i].id[0];
+			var distance = distanceFromStation (latitude, longitude, data.stations.station[i]);
+			
+			var object  = {};
+			object[id] = distance;
+			distanceArray.push(object);
+			
+		}
+		
+		var sorted = distanceArray.sort(compareDistancesOfStations);
+		if (number) callback(sorted.slice(0, number));
+		else callback(sorted);
+		
+	});
+}
 
 function docksAvailableForStation (id, callback) {
 	
@@ -157,31 +196,7 @@ function bikesAvailableForStation (id, callback) {
 
 /*----------Helper Functions----------*/
 
-function nearestStations (latitude, longitude, callback) {
 
-	// The callback receives an ordered array (in increasing distance) of {id : distance}
-	
-	cycleData(function(data) {
-		
-		var distanceArray = [];
-		
-		for (var i=0; i<data.stations.station.length; i++) {
-
-			// Iterate through all the stations
-			var name = JSON.stringify(data.stations.station[i].name[0]);
-			var id = data.stations.station[i].id[0];
-			var distance = distanceFromStation (latitude, longitude, data.stations.station[i]);
-			
-			var object  = {};
-			object[id] = distance;
-			distanceArray.push(object);
-			
-		}
-		
-		var sorted = distanceArray.sort(compareDistancesOfStations);
-		callback(sorted);
-	});
-}
 
 function distanceFromStation (latitude, longitude, station) {
 	
