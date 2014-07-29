@@ -12,6 +12,7 @@ http.createServer(function (request, responce) {
   responce.writeHead(200, {'Content-Type': 'text/plain'});
   
   cacheXML();
+  
   cycleData(function(data){
   	 // The data is provided in a closure, as it is read from file.
   	 
@@ -26,12 +27,12 @@ http.createServer(function (request, responce) {
   	 });
 */
 /*
-  	 docksAvailableForStation (10, function(number){
+  	 docksAvailableAtStation (10, function(number){
 	  	 console.log(number + " docks available");
   	 });
 */
 /*
-  	 bikesAvailableForStation (10, function(number){
+  	 bikesAvailableAtStation (10, function(number){
 	  	 console.log(number + " bikes available");
   	 });
 */
@@ -47,9 +48,21 @@ http.createServer(function (request, responce) {
   	 });
 */
 
+/*
 	stationsWithinDistance (51.535630782, -0.155715844, 500, function (stations) {
 		console.log(stations);
 	});
+*/
+/*
+	stationsWithinDistanceWithAvailableBikes (51.535630782, -0.155715844, 2000, function (stations) {
+		console.log(stations);
+	});
+*/
+/*
+	stationsWithinDistanceWithAvailableDocks (51.535630782, -0.155715844, 5000, function (stations) {
+		console.log(stations);
+	});
+*/
   	 
   	 responce.end("Success");
   });
@@ -215,7 +228,53 @@ function stationsWithinDistance (latitude, longitude, metres, callback) {
 	});
 }
 
-function docksAvailableForStation (id, callback) {
+function stationsWithinDistanceWithAvailableBikes (latitude, longitude, metres, callback) {
+	
+	// The callback receives an ordered array (in increasing distance) of {id : distance}
+	
+	nearestStationsWithAvailableBikes(latitude, longitude, function (stations) {
+		
+		var abort = false;
+		for (var i=0; i<stations.length && !abort; i++) {
+			
+			var nearestStationIdDistancePair = stations[i];
+			var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
+			
+			if (distance > metres) {
+				
+				abort = true;
+				callback(stations.slice(0, i));
+			}
+		}
+		
+	});
+}
+
+function stationsWithinDistanceWithAvailableDocks (latitude, longitude, metres, callback) {
+	
+	// The callback receives an ordered array (in increasing distance) of {id : distance}
+	
+	nearestStationsWithAvailableDocks(latitude, longitude, function (stations) {
+		
+		var abort = false;
+		for (var i=0; i<stations.length && !abort; i++) {
+			
+			var nearestStationIdDistancePair = stations[i];
+			var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
+			
+			if (distance > metres) {
+				
+				abort = true;
+				callback(stations.slice(0, i));
+			}
+		}
+		
+	});
+}
+
+
+
+function docksAvailableAtStation (id, callback) {
 	
 	// The callback receives the number of docks available for a station id
 	
@@ -225,7 +284,7 @@ function docksAvailableForStation (id, callback) {
 	});
 }
 
-function bikesAvailableForStation (id, callback) {
+function bikesAvailableAtStation (id, callback) {
 	
 	// The callback receives the number of bikes available for a station id
 	
@@ -235,10 +294,7 @@ function bikesAvailableForStation (id, callback) {
 	});
 }
 
-/*----------*-----------*/
-
 /*----------Helper Functions----------*/
-
 
 
 function distanceFromStation (latitude, longitude, station) {
@@ -297,6 +353,7 @@ function distanceBetweenCoordinates (latitude_1,longitude_1,latitude_2,longitude
 	return Math.round(radius * b); // Distance in metres, rounded to the nearest metre
 }
 
+/*----------Core Functions----------*/
 
 // To save loading from file every time, we load into this variable.
 var loadedData;
