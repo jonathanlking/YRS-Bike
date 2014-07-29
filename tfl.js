@@ -14,12 +14,8 @@ http.createServer(function (request, responce) {
   cacheXML();
   cycleData(function(data){
   	 // The data is provided in a closure, as it is read from file.
-  	 
-  	 var distance = distanceBetweenCoordinates (51.535630782,-0.155715844,51.500645178,-0.124572515);
   	 nearestStation (51.535630782, -0.155715844, null);
-  	 
-  	 console.log(data.stations.$.lastUpdate);
-  	 responce.end("Distance from London Zoo to Big Ben is " + distance + "m");
+  	 responce.end("Success");
   });
 
 }).listen(1337, '127.0.0.1');
@@ -36,13 +32,7 @@ function nearestStation (latitude, longitude, callback) {
 			// Iterate through all the stations
 			var name = JSON.stringify(data.stations.station[i].name[0]);
 			var id = data.stations.station[i].id[0];
-			
-			var station_latitude = data.stations.station[i].lat[0];
-			var station_longitude = data.stations.station[i].long[0];
-			
-			var distance = distanceBetweenCoordinates (latitude, longitude, station_latitude, station_longitude);
-			
-/* 			console.log("Distance from Regents Park to " + name + " (" + id + ") is " + distance + "m"); */
+			var distance = distanceFromStation (latitude, longitude, data.stations.station[i]);
 			
 			var object  = {};
 			object[id] = distance;
@@ -52,9 +42,21 @@ function nearestStation (latitude, longitude, callback) {
 		}
 		
 		distanceArray.sort(compareDistancesOfStations);
+		var station = distanceArray[0]
 		console.log(distanceArray);
 		
 	});
+}
+
+function distanceFromStation (latitude, longitude, station) {
+	
+	// Takes station object
+	
+	var string = JSON.stringify(station);
+	var station_latitude = station.lat[0];
+	var station_longitude = station.long[0];
+	var distance = distanceBetweenCoordinates (latitude, longitude, station_latitude, station_longitude);
+	return distance;
 }
 
 function stationForId (id, callback) {
