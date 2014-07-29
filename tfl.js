@@ -172,6 +172,72 @@ function nearestStations (latitude, longitude, callback, number) {
 	});
 }
 
+function nearestStationsWithAvailableBikes (latitude, longitude, callback, number) {
+	
+		// The callback receives an ordered array (in increasing distance) of {id : distance}
+	
+	cycleData(function(data) {
+		
+		var distanceArray = [];
+		
+		for (var i=0; i<data.stations.station.length; i++) {
+
+			// Iterate through all the stations
+			var name = JSON.stringify(data.stations.station[i].name[0]);
+			var id = data.stations.station[i].id[0];
+			
+			// Ignore this station and move onto the next
+			var bikes = parseInt(station.nbBikes);
+			if (bikes =< 0) continue; 
+			
+			var distance = distanceFromStation (latitude, longitude, data.stations.station[i]);
+			
+			var object  = {};
+			object[id] = distance;
+			distanceArray.push(object);
+			
+		}
+		
+		var sorted = distanceArray.sort(compareDistancesOfStations);
+		if (number) callback(sorted.slice(0, number));
+		else callback(sorted);
+		
+	});
+}
+
+function nearestStationsWithAvailableDocks (latitude, longitude, callback, number) {
+	
+		// The callback receives an ordered array (in increasing distance) of {id : distance}
+	
+	cycleData(function(data) {
+		
+		var distanceArray = [];
+		
+		for (var i=0; i<data.stations.station.length; i++) {
+
+			// Iterate through all the stations
+			var name = JSON.stringify(data.stations.station[i].name[0]);
+			var id = data.stations.station[i].id[0];
+			
+			// Ignore this station and move onto the next
+			var docks = parseInt(station.nbEmptyDocks);
+			if (docks =< 0) continue; 
+			
+			var distance = distanceFromStation (latitude, longitude, data.stations.station[i]);
+			
+			var object  = {};
+			object[id] = distance;
+			distanceArray.push(object);
+			
+		}
+		
+		var sorted = distanceArray.sort(compareDistancesOfStations);
+		if (number) callback(sorted.slice(0, number));
+		else callback(sorted);
+		
+	});
+}
+
 function docksAvailableForStation (id, callback) {
 	
 	// The callback receives the number of docks available for a station id
