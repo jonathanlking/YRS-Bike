@@ -4,9 +4,6 @@ var request = require('request');
 var fileStream = require('fs');
 var parseString = require('xml2js').parseString;
 
-// Global variable for storing the cycle data - access via the cycleData() function
-var cycleData_global;
-
 function degreesToRadians(degrees) {
   return degrees * (Math.PI/180)
 }
@@ -73,8 +70,13 @@ function distanceToNearestAvailableBike (latitude, longitude, callback) {
 			var nearestStation = stations[i];
 			var station = Object.keys(nearestStation)[0];
 			
+			var type = typeof station;
+			console.log(station);
+/* 			console.log(type); */
+			
+			
 			bikesAvailableForStation (station, function(number){
-				console.log(number + " bikes available");
+/* 				console.log(number + " bikes available"); */
 			});
 /*
 			bikesAvailableForStation (station, function(bikes) {
@@ -117,7 +119,11 @@ function bikesAvailableForStation (id, callback) {
 	// The callback receives the number of bikes available for a station id
 	
 	stationForId (id, function (station){
-		callback(station.nbBikes);
+		console.log ("bikesAvailableForStation");
+		console.log(station);
+		var bikes = parseInt(station.nbBikes);
+		console.log(bikes);
+		callback(bikes);
 	});
 }
 
@@ -129,7 +135,7 @@ function nearestStations (latitude, longitude, callback) {
 
 	// The callback receives an ordered array (in increasing distance) of {id : distance}
 	
-	cycleData (function(data) {
+	cycleData(function(data) {
 		
 		var distanceArray = [];
 		
@@ -164,13 +170,21 @@ function distanceFromStation (latitude, longitude, station) {
 
 function stationForId (id, callback) {
 	
-	// The callack takes the returned station objects as its single parameter
+	// The callack takes the returned station objects id as its single parameter
 	
 	cycleData (function(data) {
 		
-		var station = data.stations.station[id-1];
-		if (station.id[0] != id) throw "The bodge to find the station didn't work :("; 
-		callback(station);
+		var array = data.stations.station;
+		for (var i = 0, len = array.length; i < len; i++) {
+			
+			if (array[i].id == id) {
+				
+				console.log("Found at index " + i);
+				callback(array[i]);
+				break;
+			}
+			
+		}	
 		
 	});
 }
@@ -199,18 +213,21 @@ function distanceBetweenCoordinates (latitude_1,longitude_1,latitude_2,longitude
 	return Math.round(radius * b); // Distance in metres, rounded to the nearest metre
 }
 
+
+// To save loading from file every time, we load into this variable.
+var loadedData;
+
 function cycleData (callback) {
-	
-	// Read the cached data
-	
-	if (cycleData_global) { 
-	
-	console.log("Unsafe");
-	callback(cycleData_global);
-	
-	}
+
+	if (loadedData) {
+		
+		console.log("Cached");
+		callback(loadedData);
+	} 
 	else {
 		
+		console.log("Not Cached");	
+	 
 		// Load from file
 		fileStream.readFile('cache.xml', 'utf8', function (error,file) {
 			if (error) console.log(error);
@@ -219,13 +236,12 @@ function cycleData (callback) {
 				// Read the cached data, convert it to json and return it.
 				
 				parseString(file, function (error, result) {
-					cycleData_global = result;
-					callback(cycleData_global);
+					loadedData = result;
+					callback(loadedData);
 				}); 
 				
 			}
 		});
-		
 	}	
 }
 
@@ -243,13 +259,11 @@ function cacheXML() {
 			fileStream.writeFile('cache.xml', body, function(error) {
 				if(error) console.log(error);
 				else console.log("File cached.");
+				loadedData = null;
 			});
 			
 		}
 	});
     
-    // Force to refresh from the latest cache, saved on file
-    cycleData_global = null;
-    
-    setTimeout(cacheXML,1000*60*3);
+    setTimeout(cacheXML,1000*3);
 }
