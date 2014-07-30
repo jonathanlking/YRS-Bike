@@ -51,18 +51,16 @@ app.get('/nearest/docks', function(request, responce){
 	}, number);
 });
 
-/*
 app.get('/distance/station', function(request, responce){
 	
 	var latitude = request.param("latitude");
 	var longitude = request.param("longitude");
-	var number = request.param("number");
 	
-	distanceToNearestStation(latitude, longitude, function (station) {
-		responce.send(station);
-	}, number);
+  	 distanceToNearestStation (latitude, longitude, function (distance) {
+  	 	// Must be sent as 'string' otherwise it assumes it to be a HTTP responce code.
+  	 	responce.send(String(distance));
+  	 }, null);
 });
-*/
 
 app.get('/', function(request, responce){
 	
@@ -166,13 +164,13 @@ function nearestStationsWithAvailableDocks(latitude, longitude, callback, number
 function distanceToNearestStation(latitude, longitude, callback, filterFunction)
 {
 	// The callback will receive the distance in metres 
-	if (!filterFunction) filterFunction = nearestStations();
+	if (!filterFunction) filterFunction = nearestStations;
 
 	filterFunction(latitude, longitude, function(stations)
 	{
 		var nearestStationIdDistancePair = stations[0];
 		var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
-		callback(distance);
+		callback(parseInt(distance));
 	});
 }
 
@@ -191,7 +189,7 @@ function distanceToNearestAvailableDock(latitude, longitude, callback)
 function stationsWithinDistance(latitude, longitude, metres, callback, filterFunction)
 {
 	// The callback receives an ordered array (in increasing distance) of {id : distance}
-	if (!filterFunction) filterFunction = nearestStations();
+	if (!filterFunction) filterFunction = nearestStations;
 
 	filterFunction(latitude, longitude, function(stations)
 	{
