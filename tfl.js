@@ -251,7 +251,7 @@ function nearestStations(latitude, longitude, callback, number)
 			var station = data.stations.station[i];
 			var id = station.id[0];
 			var distance = distanceFromStation(latitude, longitude, station);
-			
+
 			var object = {stationId : id, distance : distance};
 			distanceArray.push(object);
 		}
