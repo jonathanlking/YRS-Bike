@@ -7,12 +7,13 @@ _____________________
 
 **It generates a route that has stops every 30 minutes, where you switch bikes, so that you avoid paying more than the £2 charge for the day.**
 
+**It uses the TFL live feed, through the Cycle Hire API.**
+
 ###How to operate
 ________________________
 
 1. Get current location / input start location
 2. Choose destination
-
 ________________________
 
 
@@ -27,14 +28,9 @@ ________________________
 	+ Closest to the overall route (you don't want to go out of your way)
 5. Repeat - finding directions from the current docking station you have stopped at.
 
-**Download and cache from the TFL live feed every 3 minutes.**
-
-
 **You must wait 5 minutes before taking another ride. We are making the assumption that you will wait exactly 5 minutes and leave from the same docking station.**
 
 ### 'Back End' Usage
-
-Named `process.php`
 
 You pass in the 'to' and 'from' coordinates.
 
@@ -47,7 +43,7 @@ You pass in the 'to' and 'from' coordinates.
 
 e.g. London Zoo to Big Ben  
 
-`.../process.php?from_latitude=51.535630782&from_longitude=-0.155715844&to_latitude=51.500645178&to_longitude=-0.124572515`
+`.../route/?from_latitude=51.535630782&from_longitude=-0.155715844&to_latitude=51.500645178&to_longitude=-0.124572515`
 
 **You can use the start and end point coordinates returned to confirm the request is the latest**
 
