@@ -16,7 +16,10 @@ var app = express();
 var server = app.listen(3000, 'localhost', function()
 {
 	console.log('Listening on port %d', server.address().port);
+	// Start the XML caching process
+	cacheXML();
 });
+
 
 var error = 400;
 
@@ -226,8 +229,10 @@ app.get('/station/docks', function(request, responce)
 // Show link to Github project on landing page
 app.get('/', function(request, responce)
 {
-
-	responce.send('Please use a supported endpoint. </br></br> Documentation can be found at http://github.com/jonathanlking/YRS-Bike/blob/master/TFL.md');
+	formattedLastRefreshDate (function(formattedDate){
+		responce.send('Please use a supported endpoint. </br></br> Documentation can be found at http://github.com/jonathanlking/YRS-Bike/blob/master/TFL.md </br></br>'+'Data last refreshed: ' + formattedDate);	
+	});
+	
 });
 
 /*----------Main Functions----------*/
@@ -405,6 +410,16 @@ function bikesAvailableAtStation(id, callback)
 }
 
 /*----------Helper Functions----------*/
+
+function formattedLastRefreshDate (callback) {
+	
+	cycleData(function(data) {
+		
+		var epoch = data.stations.$.lastUpdate;
+		var date = new Date(parseInt(epoch));
+		callback(date.toLocaleString());
+	});
+}
 
 
 function distanceFromStation(latitude, longitude, station)
