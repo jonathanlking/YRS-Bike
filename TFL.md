@@ -11,7 +11,7 @@ Coordinates should be in WGS84 decimal form.
 
 =============================================
 
-Distance to nearest docking station
+Distance to nearest station
 
 **returns distance in m (to nearest metre)**
 
@@ -31,17 +31,25 @@ Distance to nearest *available*  **docks**
 
 Nearest stations
 
+`number` is optional - by default will return all stations
+
+`/nearest/stations/?latitude=51.535630782&longitude=-0.155715844&number=10`
+
 **returns array of TFL station objects 5 stations by default**
 
 ---------------------------------------------
 
 Nearest stations with *available* **docks**
 
+`/nearest/bikes/?`
+
 **returns array of TFL station objects - 5 stations by default**
 
 ---------------------------------------------
 
 Nearest stations with *available* **bikes**
+
+`/nearest/docks/?`
 
 **returns array of TFL station objects - 5 stations by default**
 

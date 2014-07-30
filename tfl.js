@@ -1,5 +1,4 @@
 var http = require('http');
-
 var request = require('request');
 var fileStream = require('fs');
 var parseString = require('xml2js').parseString;
@@ -9,71 +8,67 @@ function degreesToRadians(degrees)
 	return degrees * (Math.PI / 180)
 }
 
-http.createServer(function(request, responce)
-{
-	responce.writeHead(200, {
-		'Content-Type': 'text/plain'
-	});
+/*----------Endpoints----------*/
 
-	cacheXML();
-	
-	cycleData(function(data)
-	{
+var express = require('express');
+var app = express();
 
-		// The data is provided in a closure, as it may be read from file.
-/*
-	 nearestStations (51.535630782, -0.155715844, function (stations){
-		 console.log(stations);
-	 }, 3);
-*/
-/*
-  	 distanceToNearestStation (51.535630782, -0.155715844, function (distance) {
-  	 	console.log("Distance to station is " + distance + "m");
-  	 });
-*/
-/*
-  	 docksAvailableAtStation (10, function(number){
-	  	 console.log(number + " docks available");
-  	 });
-*/
-/*
-  	 bikesAvailableAtStation (10, function(number){
-	  	 console.log(number + " bikes available");
-  	 });
-*/
-
-/*
-	 distanceToNearestAvailableBike (51.535630782, -0.155715844, function (distance) {
-  	 	console.log("Distance to nearest available bike is " + distance + "m");
-  	 });
-*/
-/*
-	 distanceToNearestAvailableDock (51.535630782, -0.155715844, function (distance) {
-  	 	console.log("Distance to nearest available dock is " + distance + "m");
-  	 });
-*/
-
-/*
-	stationsWithinDistance (51.535630782, -0.155715844, 500, function (stations) {
-		console.log(stations);
-	});
-*/
-/*
-	stationsWithinDistanceWithAvailableBikes (51.535630782, -0.155715844, 2000, function (stations) {
-		console.log(stations);
-	});
-*/
-		stationsWithinDistanceWithAvailableDocks(51.535630782, -0.155715844, 5000, function(stations)
-		{
-			console.log(stations);
-		});
-
-		responce.end("Success");
-	});
-
-}).listen(1337, '127.0.0.1');
+var server = app.listen(3000, 'localhost', function() {
+    console.log('Listening on port %d', server.address().port);
+});
 
 console.log('Server running at http://127.0.0.1:1337/');
+
+app.get('/nearest/stations', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var number = request.param("number");
+	
+	nearestStations(latitude, longitude, function (stations) {
+		responce.send(stations);
+	}, number);
+	
+});
+app.get('/nearest/bikes', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var number = request.param("number");
+	
+	nearestStationsWithAvailableBikes(latitude, longitude, function (stations) {
+		responce.send(stations);
+	}, number);
+});
+app.get('/nearest/docks', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var number = request.param("number");
+	
+	nearestStationsWithAvailableDocks(latitude, longitude, function (stations) {
+		responce.send(stations);
+	}, number);
+});
+
+/*
+app.get('/distance/station', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var number = request.param("number");
+	
+	distanceToNearestStation(latitude, longitude, function (station) {
+		responce.send(station);
+	}, number);
+});
+*/
+
+app.get('/', function(request, responce){
+	
+	responce.send('Please use a supported endpoint. </br></br> Documentation can be found at http://github.com/jonathanlking/YRS-Bike/blob/master/TFL.md');
+});
+
 
 /*----------Main Functions----------*/
 
