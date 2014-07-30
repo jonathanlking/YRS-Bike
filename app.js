@@ -9,7 +9,7 @@ console.log('Server running.');
 
 var error = 400;
 
-app.get('/route/', function(request, responce)
+app.get('/', function(request, responce)
 {
 
 	var from_latitude = request.param("from_latitude");
