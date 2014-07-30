@@ -23,7 +23,7 @@ var server = app.listen(3000, 'localhost', function()
 
 var error = 400;
 
-console.log('Server running at http://127.0.0.1:1337/');
+console.log('Server running.');
 
 app.get('/nearest/stations', function(request, responce)
 {
@@ -417,7 +417,7 @@ function formattedLastRefreshDate (callback) {
 		
 		var epoch = data.stations.$.lastUpdate;
 		var date = new Date(parseInt(epoch));
-		callback(date.toLocaleString());
+		callback(date.toUTCString());
 	});
 }
 
