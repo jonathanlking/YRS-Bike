@@ -13,7 +13,7 @@ All distances calculated are 'as the crow flies'.
 
 =============================================
 
-#####Nearest stations
+####Nearest stations
 
 `/nearest/bikes/?`
 
@@ -21,11 +21,11 @@ All distances calculated are 'as the crow flies'.
 
 `latitude`  
 `longitude`   
-`number` (optional) - number of stations, by default will return all stations.
+`number` *optional* - number of stations, by default will return all stations.
 
 e.g. `/nearest/stations/?latitude=51.535630782&longitude=-0.155715844&number=10`
 
-**Returns array of TFL station id's and the distance away stations by default**
+**Returns array of TFL station ID's and distance away pairs**
 
 ---------------------------------------------
 
@@ -41,52 +41,94 @@ e.g. `/nearest/stations/?latitude=51.535630782&longitude=-0.155715844&number=10`
 
 =============================================
 
-#####Distance to nearest station
+####Distance to nearest station
 
-**returns distance in m (to nearest metre)**
+`/distance/station/?`
+
+**Parameters**
+
+`latitude`  
+`longitude`   
+
+e.g. `/distance/station/?latitude=51.535630782&longitude=-0.155715844`
+
+**Returns distance in m (to nearest metre)**
 
 ---------------------------------------------
 
-#####Distance to nearest *available*  **bikes**
+#####Distance to nearest *available* **bike**
 
-**returns distance in m (to nearest metre)**
+`/distance/bike/?`
 
 ---------------------------------------------
 
-#####Distance to nearest *available*  **docks**
+#####Distance to nearest *available* **docks**
 
-**returns distance in m (to nearest metre)**
+`/distance/dock/?`
 
 =============================================
 
 
-#####Stations within ... metres
+####Stations within ... metres
+
+`/stations/within/?`
+
+**Parameters**
+
+`latitude`  
+`longitude`   
+`distance` - The search radius in m.
+
+e.g. `/distance/station/?latitude=51.535630782&longitude=-0.155715844&distance=500`
 	
-**returns array of TFL station objects**
+**Returns array of TFL station ID's and distance away pairs**
 
 ---------------------------------------------
 
 #####Stations with *available* **docks** within ... metres
-	
-**returns array of TFL station objects**
+
+`/bikes/within/?`
 
 ---------------------------------------------
 
 #####Stations with *available* **bikes** within ... metres
 	
-**returns array of TFL station objects**
+`/stations/within/?`
 
 =============================================
 
-#####Station with id
-**returns TFL station object with corresponding id**
+####Station with ID
+
+`/station/?`
+
+**Parameters**
+
+`id` - Corresponding TFL station ID.  
+
+**Returns TFL station object**
 
 =============================================
 
-#####Docks available for station.
-**returns number of spaces**
+####Bikes available for station.
+
+`/station/bikes/?`
+
+**Parameters**
+
+`id` - Corresponding TFL station ID.  
+
+**Returns number of avaiblable bikes**
 
 ---------------------------------------------
 
-#####Bikes available for station.
-**returns number of bikes**
+####Docks available for station.
+
+`/station/docks/?`
+
+**Parameters**
+
+`id` - Corresponding TFL station ID.  
+
+**Returns number of avaiblable docks**
+
+
