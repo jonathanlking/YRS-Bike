@@ -251,9 +251,8 @@ function nearestStations(latitude, longitude, callback, number)
 			var station = data.stations.station[i];
 			var id = station.id[0];
 			var distance = distanceFromStation(latitude, longitude, station);
-
-			var object = {};
-			object[id] = distance;
+			
+			var object = {stationId : id, distance : distance};
 			distanceArray.push(object);
 		}
 
@@ -284,8 +283,7 @@ function nearestStationsWithAvailableBikes(latitude, longitude, callback, number
 
 			var distance = distanceFromStation(latitude, longitude, data.stations.station[i]);
 
-			var object = {};
-			object[id] = distance;
+			var object = {stationId : id, distance : distance};
 			distanceArray.push(object);
 		}
 
@@ -316,8 +314,7 @@ function nearestStationsWithAvailableDocks(latitude, longitude, callback, number
 
 			var distance = distanceFromStation(latitude, longitude, data.stations.station[i]);
 
-			var object = {};
-			object[id] = distance;
+			var object = {stationId : id, distance : distance};
 			distanceArray.push(object);
 		}
 
@@ -335,8 +332,7 @@ function distanceToNearestStation(latitude, longitude, callback, filterFunction)
 
 	filterFunction(latitude, longitude, function(stations)
 	{
-		var nearestStationIdDistancePair = stations[0];
-		var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
+		var distance = stations[0]['distance'];
 		callback(parseInt(distance));
 	});
 }
@@ -363,8 +359,7 @@ function stationsWithinDistance(latitude, longitude, metres, callback, filterFun
 		var abort = false;
 		for (var i = 0; i < stations.length && !abort; i++)
 		{
-			var nearestStationIdDistancePair = stations[i];
-			var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
+			var distance = stations[i]['distance'];
 
 			if (distance > metres)
 			{
@@ -452,8 +447,8 @@ function stationForId(id, callback)
 function compareDistancesOfStations(a, b)
 {
 	// Get the key id for a and then find the associated value, the distance.
-	distance_a = a[Object.keys(a)[0]];
-	distance_b = b[Object.keys(b)[0]];
+	distance_a = a['distance'];
+	distance_b = b['distance'];
 
 	if (distance_a < distance_b) return -1;
 	if (distance_a > distance_b) return 1;
