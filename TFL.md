@@ -105,6 +105,8 @@ e.g. `/distance/station/?latitude=51.535630782&longitude=-0.155715844&distance=5
 
 `id` - Corresponding TFL station ID.  
 
+e.g. `/station/?id=88`
+
 **Returns TFL station object**
 
 =============================================
@@ -117,6 +119,8 @@ e.g. `/distance/station/?latitude=51.535630782&longitude=-0.155715844&distance=5
 
 `id` - Corresponding TFL station ID.  
 
+e.g. `/station/bikes/?id=88`
+
 **Returns number of avaiblable bikes**
 
 ---------------------------------------------
@@ -128,6 +132,8 @@ e.g. `/distance/station/?latitude=51.535630782&longitude=-0.155715844&distance=5
 **Parameters**
 
 `id` - Corresponding TFL station ID.  
+
+e.g. `/station/docks/?id=88`
 
 **Returns number of avaiblable docks**
 
