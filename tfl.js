@@ -17,6 +17,8 @@ var server = app.listen(3000, 'localhost', function() {
     console.log('Listening on port %d', server.address().port);
 });
 
+var error = 400;
+
 console.log('Server running at http://127.0.0.1:1337/');
 
 app.get('/nearest/stations', function(request, responce){
@@ -25,9 +27,17 @@ app.get('/nearest/stations', function(request, responce){
 	var longitude = request.param("longitude");
 	var number = request.param("number");
 	
+	if (!latitude || !longitude) {	
+		responce.send(error);
+	} 
+	
+	else {
+		
 	nearestStations(latitude, longitude, function (stations) {
 		responce.send(stations);
 	}, number);
+		
+	}
 	
 });
 app.get('/nearest/bikes', function(request, responce){
@@ -36,9 +46,16 @@ app.get('/nearest/bikes', function(request, responce){
 	var longitude = request.param("longitude");
 	var number = request.param("number");
 	
-	nearestStationsWithAvailableBikes(latitude, longitude, function (stations) {
-		responce.send(stations);
-	}, number);
+	if (!latitude || !longitude) {	
+		responce.send(error);
+	} 
+	
+	else {
+		nearestStationsWithAvailableBikes(latitude, longitude, function (stations) {
+			responce.send(stations);
+		}, number);		
+	}
+	
 });
 app.get('/nearest/docks', function(request, responce){
 	
@@ -46,9 +63,17 @@ app.get('/nearest/docks', function(request, responce){
 	var longitude = request.param("longitude");
 	var number = request.param("number");
 	
+		if (!latitude || !longitude) {	
+		responce.send(error);
+	} 
+	
+	else {
+	
 	nearestStationsWithAvailableDocks(latitude, longitude, function (stations) {
 		responce.send(stations);
 	}, number);
+	
+	}
 });
 
 app.get('/distance/station', function(request, responce){
@@ -56,17 +81,115 @@ app.get('/distance/station', function(request, responce){
 	var latitude = request.param("latitude");
 	var longitude = request.param("longitude");
 	
+		if (!latitude || !longitude) {	
+		responce.send(error);
+	} 
+	
+	else {
+	
   	 distanceToNearestStation (latitude, longitude, function (distance) {
   	 	// Must be sent as 'string' otherwise it assumes it to be a HTTP responce code.
   	 	responce.send(String(distance));
   	 }, null);
+  	 
+  	 }
 });
+app.get('/distance/bike', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	
+		if (!latitude || !longitude) {	
+		responce.send(error);
+	} 
+	
+	else {
+	
+  	 distanceToNearestAvailableBike (latitude, longitude, function (distance) {
+  	 	// Must be sent as 'string' otherwise it assumes it to be a HTTP responce code.
+  	 	responce.send(String(distance));
+  	 }, null);
+  	 
+  	 }
+});
+app.get('/distance/dock', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	
+		if (!latitude || !longitude) {	
+		responce.send(error);
+	} 
+	
+	else {
+	
+  	 distanceToNearestAvailableDock (latitude, longitude, function (distance) {
+  	 	// Must be sent as 'string' otherwise it assumes it to be a HTTP responce code.
+  	 	responce.send(String(distance));
+  	 }, null);
+  	 
+  	 }
+});
+
+app.get('/stations/within', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var distance = request.param("distance");
+	
+		stationsWithinDistance (latitude, longitude, distance, function (stations) {
+		responce.send(stations);
+	});
+});
+app.get('/bikes/within', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var distance = request.param("distance");
+	
+		stationsWithinDistanceWithAvailableBikes (latitude, longitude, distance, function (stations) {
+		responce.send(stations);
+	});
+});
+app.get('/docks/within', function(request, responce){
+	
+	var latitude = request.param("latitude");
+	var longitude = request.param("longitude");
+	var distance = request.param("distance");
+	
+		stationsWithinDistanceWithAvailableDocks (latitude, longitude, distance, function (stations) {
+		responce.send(stations);
+	});
+});
+
+app.get('/station', function(request, responce){
+	
+	var stationId = request.param("id");
+	stationForId(stationId, function (station) {
+		responce.send(station);
+	});
+});
+app.get('/station/bikes', function(request, responce){
+	
+	var stationId = request.param("id");
+	bikesAvailableAtStation(stationId, function (station) {
+		responce.send(String(station));
+	});
+});
+app.get('/station/docks', function(request, responce){
+	
+	var stationId = request.param("id");
+	docksAvailableAtStation(stationId, function (station) {
+		responce.send(String(station));
+	});
+});
+
+// Show link to Github project on landing page
 
 app.get('/', function(request, responce){
 	
 	responce.send('Please use a supported endpoint. </br></br> Documentation can be found at http://github.com/jonathanlking/YRS-Bike/blob/master/TFL.md');
 });
-
 
 /*----------Main Functions----------*/
 
