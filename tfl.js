@@ -58,11 +58,9 @@ http.createServer(function (request, responce) {
 		console.log(stations);
 	});
 */
-/*
 	stationsWithinDistanceWithAvailableDocks (51.535630782, -0.155715844, 5000, function (stations) {
 		console.log(stations);
 	});
-*/
   	 
   	 responce.end("Success");
   });
@@ -167,11 +165,13 @@ function nearestStationsWithAvailableDocks (latitude, longitude, callback, numbe
 	});
 }
 
-function distanceToNearestStation (latitude, longitude, callback) {
+function distanceToNearestStation (latitude, longitude, callback, filterFunction) {
 
 	// The callback will receive the distance in metres 
 	
-	nearestStations(latitude, longitude, function (stations){
+	if (!filterFunction) filterFunction = nearestStations();
+	
+	filterFunction(latitude, longitude, function (stations){
 		
 		var nearestStationIdDistancePair = stations[0];
 		var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
@@ -184,12 +184,16 @@ function distanceToNearestAvailableBike (latitude, longitude, callback) {
 	
 	// The callback will receive the distance in metres to the nearest dock where there is a bike available
 	
+/*
 		nearestStationsWithAvailableBikes(latitude, longitude, function (stations){
 		
 		var nearestStationIdDistancePair = stations[0];
 		var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
 		callback(distance);
 	});
+*/
+	
+	distanceToNearestStation (latitude, longitude, callback, nearestStationsWithAvailableBikes);
 	
 }
 
@@ -198,19 +202,25 @@ function distanceToNearestAvailableDock (latitude, longitude, callback) {
 	
 	// The callback will receive the distance in metres to the nearest dock where there is a bike available
 	
+/*
 		nearestStationsWithAvailableDocks(latitude, longitude, function (stations){
 		
 		var nearestStationIdDistancePair = stations[0];
 		var distance = nearestStationIdDistancePair[Object.keys(nearestStationIdDistancePair)[0]];
 		callback(distance);
 	});
+*/
+
+	distanceToNearestStation (latitude, longitude, callback, nearestStationsWithAvailableDocks);
 }
 
-function stationsWithinDistance (latitude, longitude, metres, callback) {
+function stationsWithinDistance (latitude, longitude, metres, callback, filterFunction) {
 	
 	// The callback receives an ordered array (in increasing distance) of {id : distance}
 	
-	nearestStations(latitude, longitude, function (stations) {
+	if (!filterFunction) filterFunction = nearestStations();
+	
+	filterFunction(latitude, longitude, function (stations) {
 		
 		var abort = false;
 		for (var i=0; i<stations.length && !abort; i++) {
@@ -232,6 +242,7 @@ function stationsWithinDistanceWithAvailableBikes (latitude, longitude, metres, 
 	
 	// The callback receives an ordered array (in increasing distance) of {id : distance}
 	
+/*
 	nearestStationsWithAvailableBikes(latitude, longitude, function (stations) {
 		
 		var abort = false;
@@ -248,12 +259,17 @@ function stationsWithinDistanceWithAvailableBikes (latitude, longitude, metres, 
 		}
 		
 	});
+*/
+
+	stationsWithinDistance (latitude, longitude, metres, callback, nearestStationsWithAvailableBikes);
+	
 }
 
 function stationsWithinDistanceWithAvailableDocks (latitude, longitude, metres, callback) {
 	
 	// The callback receives an ordered array (in increasing distance) of {id : distance}
 	
+/*
 	nearestStationsWithAvailableDocks(latitude, longitude, function (stations) {
 		
 		var abort = false;
@@ -270,6 +286,9 @@ function stationsWithinDistanceWithAvailableDocks (latitude, longitude, metres, 
 		}
 		
 	});
+*/
+
+	stationsWithinDistance (latitude, longitude, metres, callback, nearestStationsWithAvailableDocks);
 }
 
 
