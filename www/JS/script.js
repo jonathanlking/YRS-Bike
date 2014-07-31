@@ -1,16 +1,7 @@
-$("#searchButton").click(function(){
-
-var jqxhr = $.get( "/api", function() {
-  alert( "success" );
-})
-  .done(function() {
-    alert( "second success" );
-  })
-  .fail(function() {
-    alert( "error" );
-  })
-  .always(function() {
-    alert( "finished" );
-  });
+$("#searchButton").click(function(e){
+e.preventDefault();
+$.get( "test.txt", function( data ) {
+  alert( "Data Loaded: " + data );
+});
 
 });
