@@ -13,6 +13,7 @@ var error = 400;
 app.get('/', function(request, responce)
 {
 
+/*
 	var from_latitude = request.param("from_latitude");
 	var from_longitude = request.param("from_longitude");
 	var to_latitude = request.param("to_latitude");
@@ -42,5 +43,17 @@ app.get('/', function(request, responce)
 		
 		responce.send("Happy!");
 	}
+*/
+
+	// Load from file
+	fileStream.readFile('sample.json', 'utf8', function(error, file)
+	{
+		if (error) console.log(error);
+		else
+		{
+			responce.send(file);
+	
+		}
+	});
 
 });
