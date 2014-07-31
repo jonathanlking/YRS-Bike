@@ -76,7 +76,7 @@ e.g. London Zoo to Big Ben
 **Sample Responce**
 
 	{
-		"timestamp": "2014-07-28T15:30:00Z",
+		"timestamp": "2014-07-31T15:30:00Z",
 		"start": {
 			"longitude": "-0.155715844"
 			"latitude": "51.535630782"
@@ -84,22 +84,22 @@ e.g. London Zoo to Big Ben
 		},
 		"stations": [
 			{
-				"id": "",
-      			"name": "",
-      			"longitude": "",
-      			"latitude": "",
-      			"distance": "",
-      			"time": "",
-      			"duration": "",
+				"id": "271",
+      			"name": "London Zoo, Regents Park",
+      			"longitude": "-0.156285395",
+      			"latitude": "51.53583617",
+      			"distance": "46",
+      			"time": "2014-07-31T15:35:00Z",
+      			"duration": "25",
 			},
 			{
-				"id": "",
-      			"name": "",
-      			"longitude": "",
-      			"latitude": "",
-      			"distance": "",
-      			"time": "",
-      			"duration": "",
+				"id": "583",
+      			"name": "Abingdon Green, Great College Street",
+      			"longitude": "-0.125978",
+      			"latitude": "51.497622",
+      			"distance": "350",
+      			"time": "2014-07-31T15:55:00Z",
+      			"duration": "0",
 			}
 		],
 		"end": {
