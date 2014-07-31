@@ -1,4 +1,5 @@
   var mapObject = null;
+  var markers = [];
 
   setupMap();
 
@@ -46,6 +47,7 @@
   				addStartEndToMap(data.start, data.end);
   				var directions = writtenDirections(data.stations);
   				displayDirections(directions);
+  				zoomMap();
 
   			});
 
@@ -54,6 +56,16 @@
   	});
 
   });
+  
+  function zoomMap(){
+	  
+	  var bounds = new google.maps.LatLngBounds();
+	  for(i=0;i<markers.length;i++) {
+		  bounds.extend(markers[i].getPosition());
+	}
+
+	mapObject.fitBounds(bounds);
+  }
 
   function setupMap()
   {
@@ -130,12 +142,14 @@
   	var image = 'logo.png';
 
   	// Place the marker on the map
-  	new google.maps.Marker(
+  	var marker = new google.maps.Marker(
   	{
   		map: mapObject,
   		position: userLatLng,
   		icon: image
   	});
+  	
+  	markers.push(marker);
   }
 
   function geolocationError(positionError)
@@ -172,21 +186,26 @@
   	
   	var image = 'walk.png';
 
-  	new google.maps.Marker(
+  	var origin = new google.maps.Marker(
   	{
   		map: mapObject,
   		position: start_position,
   		title: 'Origin',
   		icon: image
   	});
+  	
+  	markers.push(origin);
 
-  	new google.maps.Marker(
+  	var destination = new google.maps.Marker(
   	{
   		map: mapObject,
   		position: end_position,
   		title: 'Destination',
   		icon: image
   	});
+  	
+  	markers.push(destination);
+  	
   }
 
   function addPlacesToMap(places)
@@ -200,13 +219,15 @@
   		position = new google.maps.LatLng(place.latitude, place.longitude);
   		name = place.name;
 
-  		new google.maps.Marker(
+  		var marker = new google.maps.Marker(
   		{
   			map: mapObject,
   			position: position,
   			title: name,
   			icon: image
   		});
+  		
+  		markers.push(marker);
 
   	}
   }
