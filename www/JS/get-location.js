@@ -20,7 +20,8 @@ function geolocationSuccess(position){
           center : userLatLng,
           mapTypeId : google.maps.MapTypeId.ROADMAP
         };
-         var mapObject = new google.maps.Map(document.getElementById("map"), myOptions);
+        document.getElementById("map").style.display = "block";
+        var mapObject = new google.maps.Map(document.getElementById("map"), myOptions);
           // Place the marker on the map
         new google.maps.Marker({
           map: mapObject,
