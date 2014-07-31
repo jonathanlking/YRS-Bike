@@ -45,7 +45,7 @@
 
   				addPlacesToMap(data.stations);
   				addStartEndToMap(data.start, data.end);
-  				var directions = writtenDirections(data.stations);
+  				var directions = writtenDirections(data);
   				displayDirections(directions);
   				zoomMap();
 
@@ -93,6 +93,9 @@
   	{
   		$('#directions').append('<li> ' + directions[i] + '</li>');
   	}
+  	
+  	// Make visible
+  	$(".direction-list").css("display", "block");
   }
 
   function addressForlocation(location, callback)
@@ -138,8 +141,8 @@
   {
   	var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   	writeAddressName(userLatLng);
-
-  	var image = 'logo.png';
+  	
+  	var image = new google.maps.MarkerImage("location.png", null, null, null, new google.maps.Size(32,47));
 
   	// Place the marker on the map
   	var marker = new google.maps.Marker(
@@ -150,11 +153,13 @@
   	});
   	
   	markers.push(marker);
+  	zoomMap();
   }
 
   function geolocationError(positionError)
   {
-  	alert("Error: " + positionError.message);
+  	$('#getLocation').text("There was a problem. Click to try again.");
+  	console.log("Error: " + positionError.message);
   }
 
   function writeAddressName(latLng)
@@ -184,7 +189,7 @@
   	console.log(end_position);
   	
   	
-  	var image = 'walk.png';
+  	var image = new google.maps.MarkerImage("walk.png", null, null, null, new google.maps.Size(32,47));
 
   	var origin = new google.maps.Marker(
   	{
@@ -211,7 +216,7 @@
   function addPlacesToMap(places)
   {
   
-  	var image = 'station.png';
+  	var image = new google.maps.MarkerImage("station.png", null, null, null, new google.maps.Size(32,47));
   	
   	for (var i = 0; i < places.length; i++)
   	{
@@ -231,22 +236,43 @@
 
   	}
   }
+  
+  function formatDateForHoursAndMinutes(date) {
+	  
+	  //returns a formatted string
+	  var date = new Date(date);
+	  var hours = date.getHours();
+	  var minutes = date.getMinutes();
+	  return hours + ":" + minutes;
+  }
+  
+  function formatDateForHTML(date) {
+	  
+	  return "<strong> Leaving at "+formatDateForHoursAndMinutes(date)+"</strong>";
+  }
 
-  function writtenDirections(places)
+  function writtenDirections(data)
   {
 
   	// Returns an array of directions
+  	
+  	var places = data.stations;
   	var directionsList = [];
-  	var direction = 'Go to the station at ' + places[0].name;
+  	var direction = formatDateForHTML(data.start.time) + ', go to the station at ' + places[0].name + ".";
   	directionsList.push(direction);
 
   	for (var i = 1; i < places.length; i++)
   	{
   		var station = places[i - 1];
   		var nextStation = places[i];
-  		var direction = "Cycle to the station at " + nextStation.name + " - this should take " + station.duration + " minutes.";
+  		var direction = formatDateForHTML(station.time) + ", cycle to the station at " + nextStation.name + ", this should take " + station.duration + " minutes.";
   		directionsList.push(direction);
   	}
+  	
+  	// This is all a bit of a bodge - really needs neatening up... 
+  	
+  	directionsList.push(formatDateForHTML(places[places.length-1].time) + ", walk to your final destination.");
+  	directionsList.push("<strong>Arrive at " + formatDateForHoursAndMinutes(data.end.time) + "</strong>");
 
   	return directionsList;
   }
