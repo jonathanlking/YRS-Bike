@@ -1,6 +1,6 @@
 $("#searchButton").click(function(){
 
-var jqxhr = $.get( "pedal.jlk.co", function() {
+var jqxhr = $.get( "/api", function() {
   alert( "success" );
 })
   .done(function() {
