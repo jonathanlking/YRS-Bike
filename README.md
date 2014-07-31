@@ -9,11 +9,11 @@ _____________________
 
 **It uses the TFL live feed, through the Cycle Hire API.**
 
-###How to operate
+###How to operate  
 ________________________
 
 1. Get current location / input start location
-2. Choose destination
+2. Choose destination  
 ________________________
 
 
@@ -43,7 +43,7 @@ You pass in the 'to' and 'from' coordinates.
 
 e.g. London Zoo to Big Ben  
 
-`.../?from_latitude=51.535630782&from_longitude=-0.155715844&to_latitude=51.500645178&to_longitude=-0.124572515`
+`/api/?from_latitude=51.535630782&from_longitude=-0.155715844&to_latitude=51.500645178&to_longitude=-0.124572515`
 
 **You can use the start and end point coordinates returned to confirm the request is the latest**
 
