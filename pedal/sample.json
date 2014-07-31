@@ -1,7 +1,9 @@
 	{
 		"timestamp": "2014-07-31T15:30:00Z",
 		"start": {
-			"longitude": "-0.155715844""latitude": "51.535630782""time": "2014-07-28T15:30:00Z"
+			"longitude": "-0.155715844",
+			"latitude": "51.535630782",
+			"time": "2014-07-28T15:30:00Z"
 		},
 		"stations": [
 		{
@@ -11,7 +13,7 @@
 			"latitude": "51.53583617",
 			"distance": "46",
 			"time": "2014-07-31T15:35:00Z",
-			"duration": "25",
+			"duration": "25"
 		}, {
 			"id": "583",
 			"name": "Abingdon Green, Great College Street",
@@ -19,9 +21,11 @@
 			"latitude": "51.497622",
 			"distance": "350",
 			"time": "2014-07-31T15:55:00Z",
-			"duration": "0",
+			"duration": "0"
 		}],
 		"end": {
-			"longitude": "0.124572515""latitude": "51.500645178""time": "2014-07-28T16:15:00Z"
+			"longitude": "0.124572515",
+			"latitude": "51.500645178",
+			"time": "2014-07-28T16:15:00Z"
 		}
 	}
