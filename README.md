@@ -13,8 +13,7 @@ _____________________
 ________________________
 
 1. Get current location / input start location
-2. Choose destination  
-________________________
+2. Choose destination
 
 
 ###Implementation
