@@ -108,6 +108,8 @@
   {
   	if (navigator.geolocation)
   	{
+  	
+  		$('#getLocation').text("Determining location");
   		var positionOptions = {
   			enableHighAccuracy: true,
   			timeout: 10 * 1000 // 10 seconds
@@ -116,7 +118,7 @@
   	}
   	else
   	{
-  		alert("Your browser does not support geolocation")
+  		 $('#getLocation').text("Your browser does not support geolocation");
   	}
   }
 
@@ -152,8 +154,9 @@
   		if (status == google.maps.GeocoderStatus.OK)
   		{
   			$('#start-position').val(results[0].formatted_address);
+  			$('#getLocation').text("Get your location");
   		}
-  		else alert("Unable to retrieve your address");
+  		else $('#getLocation').text("Unable to retrieve your address");
   	});
   }
 
@@ -167,7 +170,7 @@
   	console.log(end_position);
   	
   	
-  	var image = 'logo.png';
+  	var image = 'walk.png';
 
   	new google.maps.Marker(
   	{
@@ -188,6 +191,9 @@
 
   function addPlacesToMap(places)
   {
+  
+  	var image = 'station.png';
+  	
   	for (var i = 0; i < places.length; i++)
   	{
   		var place = places[i];
@@ -198,7 +204,8 @@
   		{
   			map: mapObject,
   			position: position,
-  			title: name
+  			title: name,
+  			icon: image
   		});
 
   	}
