@@ -1,5 +1,11 @@
+  var mapObject = null;
+
+  setupMap();
+
   $("#searchButton").click(function(event)
   {
+  	console.log("click");
+  	event.stopPropagation();
 
   	// When the search button is pressed
   	// Cancel the request
@@ -28,32 +34,54 @@
   			// Now create the URL for the request
   			var url = "/api/?from_latitude=" + start_address.latitude + "&from_longitude=" + start_address.longitude + "&to_latitude=" + end_address.latitude + "&to_longitude=" + end_address.longitude;
 
-  			$.get(url, function(data)
+  			$.get(url, function(json)
   			{
-	  			alert(data);
+  				var data = JSON.parse(json);
+
+  				// Handle the returned data and use it to update the website.
+  				// Display the map
+  				/* document.getElementById("map").style.display = "block"; */
+
+  				addPlacesToMap(data.stations);
+  				addStartEndToMap(data.start, data.end);
+  				var directions = writtenDirections(data.stations);
+  				displayDirections(directions);
+
   			});
 
   		});
 
   	});
 
-  	// Start with the start position
-
-/*
-
- 	$.get("/api/", function(data)
- 	{
- 		var parsed = JSON.parse(data);
- 		addPlacesToMap(parsed.stations);
- 		addStartEndToMap(parsed.start, parsed.end);
- 		var directions = writtenDirections (parsed.stations);
- 		for (var i = 0; i < directions.length; i++) {
-	 	$('#directions').append('<li> '+ directions[i] +'</li>');	
- 		}
- 	});
-*/
-
   });
+
+  function setupMap()
+  {
+	  document.getElementById("map").style.display = "block";
+  	london = new google.maps.LatLng(51.5073509, -0.127758299);
+
+  	var myOptions = {
+  		zoom: 13,
+  		center: london,
+  		mapTypeId: google.maps.MapTypeId.ROADMAP
+  	}
+
+  	mapObject = new google.maps.Map(document.getElementById("map"), myOptions);
+
+  }
+
+  function displayDirections(directions)
+  {
+
+  	// Clear any previous directions
+  	$('#directions').empty();
+
+  	// Write the new ones
+  	for (var i = 0; i < directions.length; i++)
+  	{
+  		$('#directions').append('<li> ' + directions[i] + '</li>');
+  	}
+  }
 
   function addressForlocation(location, callback)
   {
@@ -76,9 +104,6 @@
 
   }
 
-
-  var mapObject = null;
-
   function geoLocateUser()
   {
   	if (navigator.geolocation)
@@ -99,15 +124,6 @@
   {
   	var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   	writeAddressName(userLatLng);
-  	var myOptions = {
-  		zoom: 16,
-  		center: userLatLng,
-  		mapTypeId: google.maps.MapTypeId.ROADMAP
-  	};
-
-  	document.getElementById("map").style.display = "block";
-  	mapObject = new google.maps.Map(document.getElementById("map"), myOptions);
-
 
   	var image = 'logo.png';
 
@@ -135,7 +151,7 @@
   	{
   		if (status == google.maps.GeocoderStatus.OK)
   		{
-  			$('.start-position').val(results[0].formatted_address);
+  			$('#start-position').val(results[0].formatted_address);
   		}
   		else alert("Unable to retrieve your address");
   	});
@@ -146,19 +162,27 @@
 
   	start_position = new google.maps.LatLng(start.latitude, start.longitude);
   	end_position = new google.maps.LatLng(end.latitude, end.longitude);
+  	
+  	console.log(start_position);
+  	console.log(end_position);
+  	
+  	
+  	var image = 'logo.png';
 
   	new google.maps.Marker(
   	{
   		map: mapObject,
   		position: start_position,
-  		title: 'Origin'
+  		title: 'Origin',
+  		icon: image
   	});
 
   	new google.maps.Marker(
   	{
   		map: mapObject,
   		position: end_position,
-  		title: 'Destination'
+  		title: 'Destination',
+  		icon: image
   	});
   }
 
@@ -200,7 +224,7 @@
   }
 
    /*Click handlers*/
-  $('.getLocation').click(function()
+  $('#getLocation').click(function()
   {
   	geoLocateUser();
   });
