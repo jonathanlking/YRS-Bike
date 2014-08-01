@@ -1,31 +1,40 @@
 	{
 		"timestamp": "2014-07-31T15:30:00Z",
 		"start": {
-			"longitude": "-0.155715844",
-			"latitude": "51.535630782",
+			"longitude": "0.0127",
+			"latitude": "51.5462",
 			"time": "2014-07-28T15:30:00Z"
 		},
 		"stations": [
 		{
-			"id": "271",
-			"name": "London Zoo, Regents Park",
-			"longitude": "-0.156285395",
-			"latitude": "51.53583617",
-			"distance": "46",
-			"time": "2014-07-31T15:35:00Z",
+			"id": "484",
+			"name": "Bromley High Street, Bromley",
+			"longitude": "-0.013258",
+			"latitude": "51.528828",
+			"distance": "2637",
+			"time": "2014-07-31T16:13:00Z",
 			"duration": "25"
 		}, {
-			"id": "583",
-			"name": "Abingdon Green, Great College Street",
-			"longitude": "-0.125978",
-			"latitude": "51.497622",
-			"distance": "350",
-			"time": "2014-07-31T15:55:00Z",
+			"id": "289",
+			"name": "South Audley Street, Mayfair",
+			"longitude": "-0.151296092",
+			"latitude": "51.50923022",
+			"distance": "11638",
+			"time": "2014-07-31T16:38:00Z",
+			"duration": "11"
+		}, {
+			"id": "316",
+			"name": "Cardinal Place, Victoria",
+			"longitude": "-0.141943703",
+			"latitude": "51.49768448",
+			"distance": "1873",
+			"time": "2014-07-31T16:49:00Z",
 			"duration": "0"
-		}],
+		}
+		],
 		"end": {
-			"longitude": "-0.124572515",
+			"longitude": "-0.142103434",
 			"latitude": "51.500645178",
-			"time": "2014-07-28T16:15:00Z"
+			"time": "2014-07-28T16:53:00Z"
 		}
 	}
