@@ -102,10 +102,9 @@ app.get('/api/', function(request, responce)
 
 						// The time from the start station to the end station
 						// If the time between stations is greater than 30 minutes, use another station in between them
-						
 						var timeAtEndStation = new Date(timeAtFirstStation.getTime() + (time * 1000));
 						endStation.time = timeAtEndStation;
-						
+
 						if (time > 30 * 60)
 						{
 
@@ -144,10 +143,10 @@ app.get('/api/', function(request, responce)
 									// We now need the time from this station to the end station
 									// We can now finish the first station object
 									firstStation.duration = time / 60;
-									
+
 									var timeAtMiddle = new Date(timeAtFirstStation.getTime() + (time * 1000));
 									middleStation.time = timeAtMiddle;
-									
+
 									firstStation.distance = distance;
 									stations.push(firstStation);
 
@@ -165,18 +164,17 @@ app.get('/api/', function(request, responce)
 										{
 
 											// Get walking time from the station to the destination
-											
 											endStation.distance = distance;
-											endStation.duration = time/60;
-											
+											endStation.duration = time / 60;
+
 											var timeAtEnd = new Date(timeAtEndStation.getTime() + (time * 1000));
 											end.time = timeAtEnd;
 
-											
+
 											stations.push(endStation);
 											responce_data.stations = stations;
 											responce_data.end = end;
-	
+
 											responce.send(JSON.stringify(responce_data));
 										});
 
@@ -191,7 +189,20 @@ app.get('/api/', function(request, responce)
 						{
 
 							// Only one station - Happy days! (I hate that saying...) + why are they even using this website...!?
+							firstStation.distance = distance;
+							stations.push(firstStation);
 
+							endStation.duration = time / 60;
+
+							var timeAtEnd = new Date(timeAtEndStation.getTime() + (time * 1000));
+							end.time = timeAtEnd;
+
+
+							stations.push(endStation);
+							responce_data.stations = stations;
+							responce_data.end = end;
+
+							responce.send(JSON.stringify(responce_data));
 						}
 
 					});
