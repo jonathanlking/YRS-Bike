@@ -94,6 +94,7 @@ app.get('/api/', function(request, responce)
 
 						// The time from the start station to the end station
 						console.log(time);
+						console.log(startStationLocation);
 						responce.send(time / 60 + " minutes from the start station to the end station</br></br>");
 
 						firstStation.duration = time / 60;
@@ -111,11 +112,25 @@ app.get('/api/', function(request, responce)
 							// You can therefore guess the distace at 30 minutes
 							
 							// The guess distance
-							var guess = ((15*60)/time)*distance;
+							var guess = ((30*60)/time)*distance;
+							var ratio = ((30*60)/time);
+							console.log(guess + " guess distance - " + time + "time ");
 							// Guess the coordinates
+							
+							var d_lat = parseFloat(endStationLocation.latitude)-parseFloat(startStation.latitude);
+							var d_long = parseFloat(endStationLocation.longitude)-parseFloat(startStation.longitude);
+							
+							console.log(d_lat + "," + d_long + " Delta");
+							console.log(ratio);
+							
+							var guessLat = parseFloat(startStation.latitude) + ratio*d_lat;
+							var guessLong = parseFloat(startStation.longitude) + ratio*d_long;
+							
+/*
 							var guessLat = ( parseFloat(endStationLocation.latitude)-parseFloat(startStation.latitude))*parseFloat((guess/distance)) + parseFloat(startStation.latitude);
 
 							var guessLong = (parseFloat(endStationLocation.longitude)-parseFloat(startStation.longitude))*parseFloat((guess/distance)) + parseFloat(startStation.longitude);
+*/
 							
 							nearestStationTo(guessLat, guessLong, function (station) {
 								
@@ -123,7 +138,7 @@ app.get('/api/', function(request, responce)
 								console.log(station);
 								var middleStation = JSON.parse(data)[0];
 								var actualLocation = {latitude: middleStation.latitude, longitude: middleStation.longitude};
-								timeFromTo(startStationLocation, actualLocation, "bicycling", function (time, distance){
+								timeFromTo(startStationLocation, actualLocation, "bicycling", function (time_to_middle_station, distance){
 									
 									console.log("Actual time: "+time/60);
 								});
