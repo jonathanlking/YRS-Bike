@@ -83,72 +83,101 @@ app.get('/api/', function(request, responce)
 				{
 
 					// Find the end station
-					var endStation = JSON.parse(data)[0];
+					var endStationObject = JSON.parse(data)[0];
+					console.log(endStationObject);
 					var endStationLocation = {
-						latitude: endStation.latitude,
-						longitude: endStation.longitude
+						latitude: endStationObject.latitude,
+						longitude: endStationObject.longitude
+					};
+					var endStation = {
+						id: endStationObject.id,
+						name: endStationObject.name,
+						latitude: endStationLocation.latitude,
+						longitude: endStationLocation.longitude,
+						duration: 0,
 					};
 
 					timeFromTo(startStationLocation, endStationLocation, 'bicycling', function(time, distance)
 					{
 
 						// The time from the start station to the end station
-						console.log(time);
-						console.log(startStationLocation);
-						responce.send(time / 60 + " minutes from the start station to the end station</br></br>");
-
-						firstStation.duration = time / 60;
-						firstStation.distance = distance;
-						stations.push(firstStation);
-
 						// If the time between stations is greater than 30 minutes, use another station in between them
+						
+						var timeAtEndStation = new Date(timeAtFirstStation.getTime() + (time * 1000));
+						var endStation.time = timeAtEndStation;
+						
 						if (time > 30 * 60)
 						{
 
 							// Do some linear interpolation stuff
-							
 							// You know the distance from the start to the end
 							// You know the time from the start to the end
 							// You can therefore guess the distace at 30 minutes
-							
 							// The guess distance
-/* 							var guess = ((30*60)/time)*distance; */
-							var ratio = ((30*60)/time);
-/* 							console.log(guess + " guess distance - " + time + "time "); */
+							var ratio = ((30 * 60) / time);
 							// Guess the coordinates
-							
-							var d_lat = parseFloat(endStationLocation.latitude)-parseFloat(startStation.latitude);
-							var d_long = parseFloat(endStationLocation.longitude)-parseFloat(startStation.longitude);
-							
-							console.log(d_lat + "," + d_long + " Delta");
-							console.log(ratio);
-							
-							var guessLat = parseFloat(startStation.latitude) + ratio*d_lat;
-							var guessLong = parseFloat(startStation.longitude) + ratio*d_long;
-							
-/*
-							var guessLat = ( parseFloat(endStationLocation.latitude)-parseFloat(startStation.latitude))*parseFloat((guess/distance)) + parseFloat(startStation.latitude);
+							var d_lat = parseFloat(endStationLocation.latitude) - parseFloat(startStation.latitude);
+							var d_long = parseFloat(endStationLocation.longitude) - parseFloat(startStation.longitude);
 
-							var guessLong = (parseFloat(endStationLocation.longitude)-parseFloat(startStation.longitude))*parseFloat((guess/distance)) + parseFloat(startStation.longitude);
-*/
-							
-							nearestStationTo(guessLat, guessLong, function (station) {
-								
-								console.log("Guess - Lat: "+guessLat+" Long: "+guessLong);
-								
+							var guessLat = parseFloat(startStation.latitude) + ratio * d_lat;
+							var guessLong = parseFloat(startStation.longitude) + ratio * d_long;
+
+							nearestStationTo(guessLat, guessLong, function(station)
+							{
+
 								// The nearest station
 								var middleStation = JSON.parse(station)[0];
 								console.log(middleStation);
-								
-								var middleStationLocation = {latitude: middleStation.latitude, longitude: middleStation.longitude};
-								
-								console.log("Actual - Lat: "+middleStationLocation.latitude+" Long: "+middleStationLocation.longitude);
-								timeFromTo(startStationLocation, middleStationLocation, "bicycling", function (time, distance){
-									
-									console.log("Actual time: "+time);
+
+								var middleStationLocation = {
+									latitude: middleStation.latitude,
+									longitude: middleStation.longitude
+								};
+
+								console.log("Actual - Lat: " + middleStationLocation.latitude + " Long: " + middleStationLocation.longitude);
+								timeFromTo(startStationLocation, middleStationLocation, "bicycling", function(time, distance)
+								{
+
+									console.log("Actual time: " + time);
+
+									// We now have the middle station and the time it takes to get there 
+									// We now need the time from this station to the end station
+									// We can now finish the first station object
+									firstStation.duration = time / 60;
+									firstStation.distance = distance;
+									stations.push(firstStation);
+
+
+									timeFromTo(middleStationLocation, endStationLocation, 'bicycling', function(time, distance)
+									{
+
+										console.log("Time from middle to end station: " + time);
+
+										middleStation.duration = time / 60;
+										middleStation.distance = distance;
+										stations.push(middleStation);
+
+										timeFromTo(endStationObject, end, 'walking', function(time, distance)
+										{
+
+											// Get walking time from the station to the destination
+											
+											endStation.distance = distance;
+											endStation.duration = time/60;
+											var timeAtEnd = new Date(timeAtEndStation.getTime() + (time * 1000));
+											end.time = timeAtEnd;
+											stations.push(endStation);
+											responce_data.stations = stations;
+											responce_data.end = end;
+	
+											responce.send(JSON.stringify(responce_data));
+										});
+
+									});
+
 								});
 							});
-							
+
 						}
 
 						else
@@ -156,7 +185,6 @@ app.get('/api/', function(request, responce)
 
 							// Only one station - Happy days! (I hate that saying...) + why are they even using this website...!?
 
-							
 						}
 
 					});
