@@ -112,9 +112,9 @@ app.get('/api/', function(request, responce)
 							// You can therefore guess the distace at 30 minutes
 							
 							// The guess distance
-							var guess = ((30*60)/time)*distance;
+/* 							var guess = ((30*60)/time)*distance; */
 							var ratio = ((30*60)/time);
-							console.log(guess + " guess distance - " + time + "time ");
+/* 							console.log(guess + " guess distance - " + time + "time "); */
 							// Guess the coordinates
 							
 							var d_lat = parseFloat(endStationLocation.latitude)-parseFloat(startStation.latitude);
@@ -134,13 +134,18 @@ app.get('/api/', function(request, responce)
 							
 							nearestStationTo(guessLat, guessLong, function (station) {
 								
-								console.log("Lat: "+guessLat+" Long: "+guessLong);
-								console.log(station);
-								var middleStation = JSON.parse(data)[0];
-								var actualLocation = {latitude: middleStation.latitude, longitude: middleStation.longitude};
-								timeFromTo(startStationLocation, actualLocation, "bicycling", function (time_to_middle_station, distance){
+								console.log("Guess - Lat: "+guessLat+" Long: "+guessLong);
+								
+								// The nearest station
+								var middleStation = JSON.parse(station)[0];
+								console.log(middleStation);
+								
+								var middleStationLocation = {latitude: middleStation.latitude, longitude: middleStation.longitude};
+								
+								console.log("Actual - Lat: "+middleStationLocation.latitude+" Long: "+middleStationLocation.longitude);
+								timeFromTo(startStationLocation, middleStationLocation, "bicycling", function (time, distance){
 									
-									console.log("Actual time: "+time/60);
+									console.log("Actual time: "+time);
 								});
 							});
 							
@@ -175,6 +180,7 @@ function nearestStationTo(latitude, longitude, callback)
 {
 
 	var requestString = 'http://tfl.jlk.co/nearest/bikes/?latitude=' + latitude + '&longitude=' + longitude + '&number=1';
+	console.log(requestString);
 	request(requestString, function(error, response, body)
 	{
 		if (!error && response.statusCode == 200)
